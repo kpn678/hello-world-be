@@ -8,6 +8,8 @@ app.use(cors());
 
 const server = http.createServer(app);
 
+const CHAT_BOT = 'ChatBot'; 
+
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:3000',
@@ -20,6 +22,12 @@ io.on('connection', (socket) => {
   socket.on('join_room', (data) => {
     const {username, room} = data;
     socket.join(room);
+    let createdTime = Date.now();
+    socket.to(room).emit('receive_message', {
+      message: `${username} has joined the chat!`,
+      username: CHAT_BOT,
+      createdTime
+    });
   });
 });
 
