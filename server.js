@@ -28,6 +28,11 @@ io.on('connection', (socket) => {
       username: CHAT_BOT,
       createdTime
     });
+    socket.emit('receive_message', {
+      message: `Welcome, ${username}!`,
+      username: CHAT_BOT,
+      createdTime
+    })
   });
 });
 
