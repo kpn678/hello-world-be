@@ -10,6 +10,9 @@ const server = http.createServer(app);
 
 const CHAT_BOT = 'ChatBot'; 
 
+let chatroom = '';
+let allUsers = [];
+
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:3000',
@@ -32,7 +35,16 @@ io.on('connection', (socket) => {
       message: `Welcome, ${username}!`,
       username: CHAT_BOT,
       createdTime
-    })
+    });
+    chatroom = room;
+    allUsers.push({
+      id: socket.id,
+      username,
+      room
+    });
+    const chatroomUsers = allUsers.filter((user) => user.room === room);
+    socket.to(room).emit('chatroom_users', chatroomUsers);
+    socket.emit('chatroom_users', chatroomUsers);
   });
 });
 
