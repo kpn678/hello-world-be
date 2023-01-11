@@ -1,3 +1,5 @@
+let axios = require('axios');
+
 const harperSaveMessage = (message, username, room) => {
   const dbUrl = process.env.HARPERDB_URL;
   const dbPw = process.env.HARPERDB_PW;
@@ -25,6 +27,16 @@ const harperSaveMessage = (message, username, room) => {
     },
     data: data
   }
+
+  return new Promise((resolve, reject) => {
+    axios(config)
+      .then(function (response) {
+        resolve(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        reject(error);
+      });
+  });
 }
 
 module.exports = harperSaveMessage;
