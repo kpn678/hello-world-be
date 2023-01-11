@@ -4,6 +4,7 @@ const app = express();
 const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const harperSaveMessage = require('./services/harper-save-message');
 
 app.use(cors());
 
@@ -23,19 +24,20 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log(`User connected, socket id: ${socket.id}`);
+
   socket.on('join_room', (data) => {
     const {username, room} = data;
     socket.join(room);
-    let createdTime = Date.now();
+    let __createdtime__ = Date.now();
     socket.to(room).emit('receive_message', {
       message: `${username} has joined the chat!`,
       username: CHAT_BOT,
-      createdTime
+      __createdtime__
     });
     socket.emit('receive_message', {
       message: `Welcome, ${username}!`,
       username: CHAT_BOT,
-      createdTime
+      __createdtime__
     });
     chatroom = room;
     allUsers.push({
@@ -46,6 +48,14 @@ io.on('connection', (socket) => {
     const chatroomUsers = allUsers.filter((user) => user.room === room);
     socket.to(room).emit('chatroom_users', chatroomUsers);
     socket.emit('chatroom_users', chatroomUsers);
+  });
+
+  socket.on('send_message', (data) => {
+    const {message, username, room, __createdtime__} = data;
+    io.in(room).emit('receive_message', data);
+    harperSaveMessage(message, username, room, __createdtime__)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
   });
 });
 
