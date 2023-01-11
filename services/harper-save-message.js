@@ -15,6 +15,16 @@ const harperSaveMessage = (message, username, room) => {
       }
     ]
   });
+
+  let config = {
+    method: 'post',
+    url: dbUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: dbPw
+    },
+    data: data
+  }
 }
 
 module.exports = harperSaveMessage;
