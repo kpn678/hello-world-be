@@ -26,16 +26,16 @@ io.on('connection', (socket) => {
   socket.on('join_room', (data) => {
     const {username, room} = data;
     socket.join(room);
-    let createdTime = Date.now();
+    let __createdtime__ = Date.now();
     socket.to(room).emit('receive_message', {
       message: `${username} has joined the chat!`,
       username: CHAT_BOT,
-      createdTime
+      __createdtime__
     });
     socket.emit('receive_message', {
       message: `Welcome, ${username}!`,
       username: CHAT_BOT,
-      createdTime
+      __createdtime__
     });
     chatroom = room;
     allUsers.push({
