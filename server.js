@@ -5,6 +5,7 @@ const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const harperSaveMessage = require('./services/harper-save-message');
+const harperGetMessage = require('./services/harper-get-message');
 
 app.use(cors());
 
@@ -29,25 +30,35 @@ io.on('connection', (socket) => {
     const {username, room} = data;
     socket.join(room);
     let __createdtime__ = Date.now();
+
     socket.to(room).emit('receive_message', {
       message: `${username} has joined the chat!`,
       username: CHAT_BOT,
       __createdtime__
     });
+
     socket.emit('receive_message', {
       message: `Welcome, ${username}!`,
       username: CHAT_BOT,
       __createdtime__
     });
+
     chatroom = room;
     allUsers.push({
       id: socket.id,
       username,
       room
     });
+
     const chatroomUsers = allUsers.filter((user) => user.room === room);
     socket.to(room).emit('chatroom_users', chatroomUsers);
     socket.emit('chatroom_users', chatroomUsers);
+
+    harperGetMessage(room)
+      .then((last100messages) => {
+        socket.emit('last_100_messages', last100messages);
+      })
+      .catch((error) => console.log(error));
   });
 
   socket.on('send_message', (data) => {
