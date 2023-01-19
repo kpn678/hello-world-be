@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 4000;
 const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
@@ -81,11 +82,9 @@ io.on('connection', (socket) => {
       __createdtime__
     });
     socket.to(room).emit('chatroom_Users', allUsers);
-    console.log(`${username} has left the chat`);
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected from the chat');
     const user = allUsers.find(user => user.id === socket.id);
     if (user?.username) {
       allUsers = leaveRoom(socket.id, allUsers);
@@ -97,8 +96,8 @@ io.on('connection', (socket) => {
   });
 });
 
-app.get('/', (request, response) => {
-  response.send('Hello, world');
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port} !`)
 });
 
 server.listen(4000, () => 'Server is running on port 4000');
