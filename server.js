@@ -100,4 +100,4 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port} !`)
 });
 
-server.listen(4000, () => 'Server is running on port 4000');
+server.listen(port, () => `Server is running on port ${port}`);
