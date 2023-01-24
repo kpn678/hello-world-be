@@ -10,3 +10,6 @@ This back-end is designed to be used with the [Hello, World application](https:/
 
 ## Notes
 Deploying the back-end is still in-progress. For more of an explanation, please visit the [front-end README](https://github.com/kpn678/hello-world-fe).
+
+## Contributor
+- [Kristy Nguyen](https://www.linkedin.com/in/kristypnguyen/)
